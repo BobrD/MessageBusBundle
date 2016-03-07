@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <service id="message_bus" alias="message_bus.message_bus" />
+
+        <service id="message_bus.message_bus" class="BobrD\MessageBusBundle\Services\MessageBus">
+            <argument type="service" id="message_bus.base_handler_resolver" />
+            <argument type="service" id="message_bus.kernel_terminate_queue" />
+        </service>
+
+        <service id="message_bus.base_handler_resolver" class="BobrD\MessageBusBundle\Services\HandlerResolver\BaseHandlerResolver">
+
+        </service>
+
+        <service id="message_bus.kernel_terminate_queue" class="BobrD\MessageBusBundle\Services\Queue\KernelTerminateMessageQueue">
+            <argument type="service" id="message_bus.base_handler_resolver" />
+        </service>
+
+        <service id="message_bus.kernel_terminate.listener" class="BobrD\MessageBusBundle\EventListener\KernelTerminateEventListener">
+            <argument type="service" id="message_bus.kernel_terminate_queue"/>
+            <tag name="kernel.event_listener" event="kernel.terminate" />
+        </service>
+
+    </services>
+
+</container>

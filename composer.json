@@ -1,0 +1,17 @@
+{
+    "name": "bobrd/messagebus-bundle",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "description": "Message bus bundle",
+    "autoload": {
+        "psr-4": {
+            "BobrD\\MessageBusBundle\\": ""
+        }
+    },
+    "require": {
+        "php": ">=5.5.9",
+        "symfony/framework-bundle": "~2.3|~3.0",
+        "symfony/symfony": "3.0.*",
+        "rhumsaa/uuid": "^3.2"
+    }
+}
