@@ -7,10 +7,10 @@ use BobrD\MessageBusBundle\Services\Message\MessageInterface;
 
 interface HandlerResolverInterface
 {
-	/**
-	 * @param MessageInterface $message
-	 * 
-	 * @return HandlerInterface|null
-	 */
-	public function resolve(MessageInterface $message);
+    /**
+     * @param MessageInterface $message
+     * 
+     * @return HandlerInterface|null
+     */
+    public function resolve(MessageInterface $message);
 }

@@ -4,47 +4,47 @@ namespace BobrD\MessageBusBundle\Services\Message;
 
 class AsyncMessage implements AsyncMessageInterface
 {
-	/**
-	 * @var MessageInterface
-	 */
-	private $message;
-	
-	/**
-	 * @var array
-	 */
-	private $middleware;
+    /**
+     * @var MessageInterface
+     */
+    private $message;
 
-	/**
-	 * @param MessageInterface $message
-	 * @param MessageInterface[] $middleware
-	 */
-	public function __construct(MessageInterface $message, array $middleware)
-	{
-		$this->message = $message;
-		$this->middleware = $middleware;
-	}
+    /**
+     * @var MessageInterface[]
+     */
+    private $middleware = [];
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getUuid()
-	{
-		return $this->message->getUuid();
-	}
+    /**
+     * @param MessageInterface   $message
+     * @param MessageInterface[] $middleware
+     */
+    public function __construct(MessageInterface $message, array $middleware = [])
+    {
+        $this->message = $message;
+        $this->middleware = $middleware;
+    }
 
-	/**
-	 * @return MessageInterface
-	 */
-	public function getMessage()
-	{
-		return $this->message;
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function getUuid()
+    {
+        return $this->message->getUuid();
+    }
 
-	/**
-	 * @return MessageInterface[]
-	 */
-	public function getMiddleware()
-	{
-		return $this->middleware;
-	}
+    /**
+     * @return MessageInterface
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @return MessageInterface[]
+     */
+    public function getMiddleware()
+    {
+        return $this->middleware;
+    }
 }

@@ -6,8 +6,8 @@ use Ramsey\Uuid\UuidInterface;
 
 interface MessageInterface
 {
-	/**
-	 * @return UuidInterface
-	 */
-	public function getUuid();
+    /**
+     * @return UuidInterface
+     */
+    public function getUuid();
 }

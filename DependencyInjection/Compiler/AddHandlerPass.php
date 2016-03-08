@@ -6,27 +6,34 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class AddHandlerPass  implements CompilerPassInterface
+class AddHandlerPass implements CompilerPassInterface
 {
-	public function process(ContainerBuilder $container)
-	{
-		if (!$container->has('message_bus.base_handler_resolver')) {
-			return;
-		}
+    const TAG_NAME = 'message_bus.handle';
 
-		$handlerResolver = $container->findDefinition('message_bus.base_handler_resolver');
+    /**
+     * @param ContainerBuilder $container
+     * 
+     * @throws \InvalidArgumentException
+     */
+    public function process(ContainerBuilder $container)
+    {
+        if (!$container->has('message_bus.base_handler_resolver')) {
+            return;
+        }
 
-		foreach ($container->findTaggedServiceIds('message_handler') as $serviceId => $tags) {
-			foreach ($tags as $attributes) {
-				if (!isset($attributes['command'])) {
-					throw new \LogicException('Tag "message_handler" should have "command" attribute.');
-				}
+        $handlerResolver = $container->findDefinition('message_bus.base_handler_resolver');
 
-				$handlerResolver->addMethodCall('addHandler', [
-					$attributes['command'],
-					new Reference($serviceId)
-				]);
-			}
-		}
-	}
+        foreach ($container->findTaggedServiceIds(self::TAG_NAME) as $serviceId => $tags) {
+            foreach ($tags as $attributes) {
+                if (!isset($attributes['command'])) {
+                    throw new \InvalidArgumentException('Tag "'.self::TAG_NAME.'" should have "command" attribute.');
+                }
+
+                $handlerResolver->addMethodCall('addHandler', [
+                    $attributes['command'],
+                    new Reference($serviceId),
+                ]);
+            }
+        }
+    }
 }

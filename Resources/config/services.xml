@@ -6,24 +6,59 @@
 
     <services>
 
-        <service id="message_bus" alias="message_bus.message_bus" />
+        <service id="message_bus" alias="message_bus.message_bus_with_middleware" />
 
-        <service id="message_bus.message_bus" class="BobrD\MessageBusBundle\Services\MessageBus">
+        <service
+            id="message_bus.abstract_message_bus"
+            class="BobrD\MessageBusBundle\Services\Bus\AbstractMessageBus"
+            abstract="true"
+        >
             <argument type="service" id="message_bus.base_handler_resolver" />
-            <argument type="service" id="message_bus.kernel_terminate_queue" />
+            <argument type="service" id="message_bus.lazy_queue" />
         </service>
 
-        <service id="message_bus.base_handler_resolver" class="BobrD\MessageBusBundle\Services\HandlerResolver\BaseHandlerResolver">
+        <service
+            id="message_bus.message_bus_with_middleware"
+            class="BobrD\MessageBusBundle\Services\Bus\MessageBusWithMiddleware"
+            parent="message_bus.abstract_message_bus"
+        />
 
+        <service
+            id="message_bus.chain_handler_resolver"
+            class="BobrD\MessageBusBundle\Services\HandlerResolver\ChainHandlerResolver"
+            public="false"
+        />
+
+        <service
+            id="message_bus.base_handler_resolver"
+            class="BobrD\MessageBusBundle\Services\HandlerResolver\BaseHandlerResolver"
+            public="false"
+        >
+            <tag name="message_bus.resolver" />
         </service>
 
-        <service id="message_bus.kernel_terminate_queue" class="BobrD\MessageBusBundle\Services\Queue\KernelTerminateMessageQueue">
+        <service
+            id="message_bus.lazy_queue"
+            class="BobrD\MessageBusBundle\Services\Queue\LazyMessageQueue"
+        >
             <argument type="service" id="message_bus.base_handler_resolver" />
         </service>
 
-        <service id="message_bus.kernel_terminate.listener" class="BobrD\MessageBusBundle\EventListener\KernelTerminateEventListener">
-            <argument type="service" id="message_bus.kernel_terminate_queue"/>
+        <service
+            id="message_bus.kernel_terminate.listener"
+            class="BobrD\MessageBusBundle\EventListener\KernelTerminateEventListener"
+        >
+            <argument type="service" id="message_bus.lazy_queue"/>
             <tag name="kernel.event_listener" event="kernel.terminate" />
+        </service>
+
+
+        <service
+            id="message_bus.log_middleware"
+            class="BobrD\MessageBusBundle\Services\Middleware\LogMiddleware"
+        >
+            <argument type="service" id="logger"/>
+            <tag name="message_bus.middleware" />
         </service>
 
     </services>

@@ -6,10 +6,8 @@ use BobrD\MessageBusBundle\Services\Message\AsyncMessageInterface;
 
 interface MessageQueueInterface
 {
-	/**
-	 * @param AsyncMessageInterface $message
-	 * 
-	 * @return void
-	 */
-	public function add(AsyncMessageInterface $message);
+    /**
+     * @param AsyncMessageInterface $message
+     */
+    public function add(AsyncMessageInterface $message);
 }
